@@ -1,1 +1,1 @@
-web: java -jar heroku-demo-1.0-SNAPSHOT.jar
+web: java -jar target/heroku-demo-1.0-SNAPSHOT.jar
