@@ -52,7 +52,6 @@ if ( hasProperty('profile') ) {
 }
 
 heroku {
-    includes = ["build/libs/heroku-demo-1.0-SNAPSHOT.jar"]
     jdkVersion = 11
     processTypes(
             web: "java -jar build/libs/heroku-demo-1.0-SNAPSHOT.jar"
