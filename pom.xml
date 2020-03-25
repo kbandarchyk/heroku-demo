@@ -103,6 +103,17 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <jdkVersion>11</jdkVersion>
+                    <processTypes>
+                        <web>java -jar target/heroku-demo-1.0-SNAPSHOT.jar</web>
+                    </processTypes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
