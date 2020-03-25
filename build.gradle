@@ -7,6 +7,7 @@ plugins {
     id 'maven-publish'
     id "com.heroku.sdk.heroku-gradle" version "1.0.4"
     id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
 repositories {
@@ -33,21 +34,6 @@ dependencies {
 group = 'vrp'
 version = '1.0-SNAPSHOT'
 sourceCompatibility = '11'
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'vrp.herokudemo.HerokuDemoApplication'
-        )
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
-bootJar {
-    mainClassName = 'vrp.herokudemo.HerokuDemoApplication'
-}
 
 publishing {
     publications {
