@@ -33,6 +33,14 @@ group = 'vrp'
 version = '1.0-SNAPSHOT'
 sourceCompatibility = '11'
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'vrp.herokudemo.HerokuDemoApplication'
+        )
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
