@@ -47,9 +47,12 @@ tasks.withType(JavaCompile) {
 
 if ( hasProperty('profile') ) {
     apply from: "$rootDir/gradle/profile_${profile}.gradle"
+} else {
+    apply from: "$rootDir/gradle/profile_dev.gradle"
 }
 
 heroku {
+    includes = ["build/libs/heroku-demo-1.0-SNAPSHOT.jar"]
     jdkVersion = 11
     processTypes(
             web: "java -jar build/libs/heroku-demo-1.0-SNAPSHOT.jar"
