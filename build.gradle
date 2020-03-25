@@ -39,6 +39,9 @@ jar {
                 'Main-Class': 'vrp.herokudemo.HerokuDemoApplication'
         )
     }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 publishing {
