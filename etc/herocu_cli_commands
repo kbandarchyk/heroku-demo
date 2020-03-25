@@ -1,0 +1,22 @@
+heroku login - залогиниться в heroku
+heroku update - провести обновление heroku cli до последней версии
+heroku apps - показать все контейнеры приложений
+heroku create - инициализировать новый контейнер для приложения
+heroku destroy - удаляет контейнер с приложением
+heroku ps:scale - просмотр запущенных инстансов для приложения
+heroku open - открывает задеплоенное приложение
+heroku local - деплой приложения локально
+heroku config:set "PROPERTY_NAME"="PROPERTY_VALUE" - установить параметр конфигурации системы
+heroku config - отображает конфигурацию приложения
+heroku run "command" - позволяет выполнить команду в DYNO ( Например: heroku run bash - откроет доступ к bash DYNO )
+heroku addons - позволяет работать с аддонами heroku
+heroku pg - позволяет просмотреть расширенную информацию о Heroku Postgres Database
+heroku pg:psql - позволяет подключиться к psql cli
+heroku logs --tail - просмотр логов
+heroku releases - просмотр всех релизов в рамках heroku контейнера
+
+
+PS:
+git push heroku master - деплой приложения на heroku
+Procfile - файл, в котором описывается информация о командах, которые запускают приложение
+Dyno - легковеснйы Linux контейнер, который запускает команды из Procfile
