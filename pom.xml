@@ -38,19 +38,59 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>3.0.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <jdkVersion>11</jdkVersion>
-                    <processTypes>
-                        <web>java -jar heroku-web/target/heroku-web-1.0-SNAPSHOT.jar</web>
-                        <worker>java -jar heroku-worker/target/heroku-worker-1.0-SNAPSHOT.jar</worker>
-                    </processTypes>
+                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true</arguments>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+            </build>
+        </profile>
+
+        <profile>
+            <id>staging</id>
+            <build>
+            </build>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <build>
+            </build>
+        </profile>
+
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.heroku.sdk</groupId>
+                        <artifactId>heroku-maven-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <configuration>
+                            <jdkVersion>11</jdkVersion>
+                            <appName>morning-plateau-87011</appName>
+                            <processTypes>
+                                <web>java -jar target/heroku-web-1.0-SNAPSHOT.jar</web>
+                                <worker>java -jar target/heroku-worker-1.0-SNAPSHOT.jar</worker>
+                            </processTypes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 
 </project>

@@ -1,5 +1,6 @@
 Deploy application to heroku with maven plugin:
-mvn -Pproduction heroku:deploy
+mvn -Pproduction clean install
+mvn -N -Pproduction heroku:deploy
 
 Deploy application to heroku with gradle plugin:
 gradlew -Pprofile=production build deployHeroku

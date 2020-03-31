@@ -37,12 +37,18 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
+    tasks.withType(Jar) {
+        destinationDir = file("$rootDir/build/libs")
+    }
 }
 
-heroku {
-    jdkVersion = 11
-    processTypes(
-            web: "java -jar heroku-web/build/libs/heroku-web-1.0-SNAPSHOT.jar",
-            worker: "java -jar heroku-worker/build/libs/heroku-worker-1.0-SNAPSHOT.jar"
-    )
+if ( findProperty('profile') == "production") {
+    heroku {
+        jdkVersion = 11
+        appName = "morning-plateau-87011"
+        processTypes(
+                web: "java -jar build/libs/heroku-web-1.0-SNAPSHOT.jar",
+                worker: "java -jar build/libs/heroku-worker-1.0-SNAPSHOT.jar"
+        )
+    }
 }
