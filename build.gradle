@@ -6,60 +6,43 @@ plugins {
     id 'java'
     id 'maven-publish'
     id "com.heroku.sdk.heroku-gradle" version "1.0.4"
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        url = 'https://repo.maven.apache.org/maven2'
-    }
-    maven {
-        url = 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
-    }
-}
+subprojects {
+    group = 'vrp'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = '11'
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter:2.2.5.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-jetty:2.2.5.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.2.5.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE'
-    implementation 'org.springframework.data:spring-data-r2dbc:1.0.0.RELEASE'
-    implementation 'io.r2dbc:r2dbc-postgresql:0.8.0.RELEASE'
-    implementation 'org.postgresql:postgresql:42.2.11'
-    implementation 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
-    implementation 'io.springfox:springfox-spring-webflux:3.0.0-SNAPSHOT'
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-}
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'io.spring.dependency-management'
 
-group = 'vrp'
-version = '1.0-SNAPSHOT'
-sourceCompatibility = '11'
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'https://repo.maven.apache.org/maven2'
         }
     }
-}
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+            }
+        }
+    }
 
-if ( hasProperty('profile') ) {
-    apply from: "$rootDir/gradle/profile_${profile}.gradle"
-} else {
-    apply from: "$rootDir/gradle/profile_dev.gradle"
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 }
 
 heroku {
     jdkVersion = 11
     processTypes(
-            web: "java -jar build/libs/heroku-demo-1.0-SNAPSHOT.jar"
+            web: "java -jar heroku-web/build/libs/heroku-web-1.0-SNAPSHOT.jar",
+            worker: "java -jar heroku-worker/build/libs/heroku-worker-1.0-SNAPSHOT.jar"
     )
 }

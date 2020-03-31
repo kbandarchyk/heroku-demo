@@ -1,0 +1,27 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+}
+
+repositories {
+    maven {
+        url = 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE'
+    implementation 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
+    implementation 'io.springfox:springfox-spring-webflux:3.0.0-SNAPSHOT'
+    implementation 'vrp:common-library:1.0-SNAPSHOT'
+}
+
+if ( hasProperty('profile') ) {
+    apply from: "$rootDir/heroku-web/gradle/profile_${profile}.gradle"
+} else {
+    apply from: "$rootDir/heroku-web/gradle/profile_dev.gradle"
+}
+

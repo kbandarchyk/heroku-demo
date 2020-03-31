@@ -1,0 +1,20 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+}
+
+repositories {
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.2.5.RELEASE'
+    implementation 'vrp:common-library:1.0-SNAPSHOT'
+}
+
+if ( hasProperty('profile') ) {
+    apply from: "$rootDir/heroku-worker/gradle/profile_${profile}.gradle"
+} else {
+    apply from: "$rootDir/heroku-worker/gradle/profile_dev.gradle"
+}
+
