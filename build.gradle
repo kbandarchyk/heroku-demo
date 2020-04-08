@@ -37,9 +37,6 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
-    tasks.withType(Jar) {
-        destinationDir = file("$rootDir/build/libs")
-    }
 }
 
 if ( findProperty('profile') == "production") {
