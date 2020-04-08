@@ -80,7 +80,7 @@
                         <version>3.0.1</version>
                         <configuration>
                             <jdkVersion>11</jdkVersion>
-                            <appName>heroku-demo-1703</appName>
+                            <appName>java-heroku-demo-1703</appName>
                             <processTypes>
                                 <web>java -jar target/heroku-web-1.0-SNAPSHOT.jar</web>
                                 <worker>java -jar target/heroku-worker-1.0-SNAPSHOT.jar</worker>

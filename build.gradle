@@ -45,7 +45,7 @@ subprojects {
 if ( findProperty('profile') == "production") {
     heroku {
         jdkVersion = 11
-        appName = "heroku-demo-1703"
+        appName = "java-heroku-demo-1703"
         processTypes(
                 web: "java -jar build/libs/heroku-web-1.0-SNAPSHOT.jar",
                 worker: "java -jar build/libs/heroku-worker-1.0-SNAPSHOT.jar"
