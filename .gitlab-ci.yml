@@ -1,0 +1,26 @@
+image: maven:latest
+
+stages:
+- build
+- run
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+  - .m2/repository/
+  - target/
+
+build:
+  stage: build
+  script:
+  - mvn $MAVEN_CLI_OPTS compile
+
+run:
+  stage: run
+  script:
+   - docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
+   - docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
+   - docker push registry.heroku.com/heroku-demo/heroku-web
