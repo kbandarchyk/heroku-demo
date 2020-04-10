@@ -14,8 +14,15 @@ build:
 push:
   stage: push
   script:
-    - sudo docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web
-    - sudo docker build -f heroku-worker/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web
+    - sudo docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
+    - sudo docker build -f heroku-worker/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
     - sudo docker push registry.heroku.com/heroku-demo/heroku-web
     - sudo docker push registry.heroku.com/heroku-demo/heroku-worker
+    - sudo docker run --rm -e HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web --app java-heroku-demo-1703
+    - sudo docker run --rm -e HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release worker --app java-heroku-demo-1703
+
+after_script:
+- ./etc/scripts/clear.sh
+- sudo chmod -R 777 ./
+- echo "End CI"
