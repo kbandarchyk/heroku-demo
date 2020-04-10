@@ -1,0 +1,51 @@
+version: '3.2'
+
+services:
+    postgres:
+        build: ./postgres
+        hostname: postgres   
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
+        networks:
+            - heroku-demo
+        environment:
+            - DATABASE_URL=postgres://heroku_demo_admin:123a456B@postgres:5432/heroku_demo_db
+        healthcheck:
+           test: ["CMD-SHELL", "pg_isready -U postgres"]
+           interval: 10s
+           timeout: 5s
+           retries: 5
+
+    heroku-web:
+         build: ./heroku-web
+         ports: 
+            - 8080:8080
+         hostname: heroku-web
+         environment:
+           - DATABASE_URL=postgres://heroku_demo_admin:123a456B@postgres:5432/heroku_demo_db
+         depends_on:
+            - postgres
+         networks:
+            - heroku-demo
+
+    heroku-worker:
+         build: ./heroku-worker
+         ports: 
+            - 8082:8082
+         hostname: heroku-worker
+         environment:
+           - DATABASE_URL=postgres://heroku_demo_admin:123a456B@postgres:5432/heroku_demo_db
+         depends_on:
+            - postgres
+         networks:
+            - heroku-demo
+            
+volumes:
+  db-data:
+    driver: local
+    
+networks:
+  heroku-demo:
+    driver: bridge    

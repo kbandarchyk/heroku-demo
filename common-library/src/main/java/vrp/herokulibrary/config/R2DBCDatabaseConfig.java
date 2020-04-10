@@ -1,18 +1,16 @@
-package vrp.herokulibrary.config.production;
+package vrp.herokulibrary.config;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@Profile( "production" )
 @Configuration
 @EnableR2dbcRepositories( basePackages  = "vrp.herokulibrary.repository")
 public class R2DBCDatabaseConfig extends AbstractR2dbcConfiguration {

@@ -2,16 +2,18 @@ image: maven:latest
 
 stages:
 - build
-- run
+- push
 
 build:
   stage: build
   script:
-  - mvn clean install
+    - docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
 
-run:
-  stage: run
+push:
+  stage: push
   script:
-   - docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
-   - docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
-   - docker push registry.heroku.com/heroku-demo/heroku-web
+    - docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web
+    - docker build -f heroku-worker/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web
+    - docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
+    - docker push registry.heroku.com/heroku-demo/heroku-web
+    - docker push registry.heroku.com/heroku-demo/heroku-worker
