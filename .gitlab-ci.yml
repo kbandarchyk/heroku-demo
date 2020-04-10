@@ -6,12 +6,14 @@ build:
   stage: build
   script:
     - sudo chmod -R 777 ./
+    - git clean -ffdx
     - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
 
 push:
   stage: push
   script:
     - sudo chmod -R 777 ./
+    - git clean -ffdx
     - sudo docker build -f heroku-web/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
     - sudo docker build -f heroku-worker/Dockerfile -t registry.heroku.com/heroku-demo/heroku-web .
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
