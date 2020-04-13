@@ -9,7 +9,7 @@ build:
   script:
     - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
 
-    - sudo docker login registry.vrpconsulting.com:5000
+    - sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com:5000/konstantin.bondarchuk/heroku-demo/heroku-web .
     - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com:5000/konstantin.bondarchuk/heroku-demo/heroku-worker .
     - sudo docker push registry.vrpconsulting.com:5000/konstantin.bondarchuk/heroku-demo/heroku-web
