@@ -11,11 +11,15 @@ package:
   stage: package
   script:
     - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
+  artifacts:
+    expire_in: 1 days
+    paths:
+      - heroku-web/target/*.jar
+      - heroku-worker/target/*.jar
 
 create docker images:
   stage: create docker images
   script:
-  - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
   - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web -t registry.heroku.com/java-heroku-demo-1703/web  .
   - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker -t registry.heroku.com/java-heroku-demo-1703/worker .
 
