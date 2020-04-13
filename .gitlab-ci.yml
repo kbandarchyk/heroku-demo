@@ -2,38 +2,35 @@ before_script:
 - sudo chmod -R 777 ./
 
 stages:
-- build
-- package, push to gitlab registry
-- package, push to heroku registry, release
+- package
+- create docker images
+- push to gitlab registry
+- push to heroku registry, release
 
-build:
-  stage: build
+package:
+  stage: package
   script:
     - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
-  artifacts:
-    expire_in: 1 days
-    paths:
-    - heroku-web/target/*.jar
-    - heroku-worker/target/*.jar
 
-package, push to gitlab registry:
-  stage: package, push to gitlab registry
+create docker images:
+  stage: create docker images
+  script:
+  - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
+  - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web -t registry.heroku.com/java-heroku-demo-1703/web  .
+  - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker -t registry.heroku.com/java-heroku-demo-1703/worker .
+
+push to gitlab registry:
+  stage: push to gitlab registry
   script:
     - sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.vrpconsulting.com
-    - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web .
-    - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker .
     - sudo docker push registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web
     - sudo docker push registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker
 
-package, push to heroku registry, release:
-  stage: package, push to heroku registry, release
+push to heroku registry, release:
+  stage: push to heroku registry, release
   script:
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
-    - sudo docker build -f heroku-web/Dockerfile -t registry.heroku.com/java-heroku-demo-1703/web .
-    - sudo docker build -f heroku-worker/Dockerfile -t registry.heroku.com/java-heroku-demo-1703/worker .
-    - sudo docker tag registry.heroku.com/java-heroku-demo-1703/web registry.heroku.com/java-heroku-demo-1703/web
     - sudo docker push registry.heroku.com/java-heroku-demo-1703/web
-    - sudo docker tag registry.heroku.com/java-heroku-demo-1703/worker registry.heroku.com/java-heroku-demo-1703/worker
     - sudo docker push registry.heroku.com/java-heroku-demo-1703/worker
     - sudo docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web worker --app java-heroku-demo-1703
 
