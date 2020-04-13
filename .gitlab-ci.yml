@@ -13,8 +13,8 @@ build:
   artifacts:
     expire_in: 1 days
     paths:
-    - heroku-web/target/
-    - heroku-worker/target/
+    - heroku-web/target/*.jar
+    - heroku-worker/target/*.jar
 
 package, push to gitlab registry:
   stage: package, push to gitlab registry
