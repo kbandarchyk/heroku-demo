@@ -10,11 +10,15 @@ build:
   stage: build
   script:
     - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
+  artifacts:
+    expire_in: 1 days
+    paths:
+    - heroku-web/target/
+    - heroku-worker/target/
 
 package, push to gitlab registry:
   stage: package, push to gitlab registry
   script:
-    - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
     - sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.vrpconsulting.com
     - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web .
     - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker .
@@ -24,7 +28,6 @@ package, push to gitlab registry:
 package, push to heroku registry, release:
   stage: package, push to heroku registry, release
   script:
-    - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
     - sudo docker build -f heroku-web/Dockerfile -t registry.heroku.com/java-heroku-demo-1703/web .
     - sudo docker build -f heroku-worker/Dockerfile -t registry.heroku.com/java-heroku-demo-1703/worker .
