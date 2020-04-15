@@ -37,7 +37,7 @@ push to heroku registry, release:
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
     - sudo docker push registry.heroku.com/java-heroku-demo-1704/web
     - sudo docker push registry.heroku.com/java-heroku-demo-1704/worker
-    - sudo docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web worker --app java-heroku-demo-1703
+    - sudo docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web worker --app java-heroku-demo-1704
 
 after_script:
 - sudo chmod -R 777 ./
