@@ -21,8 +21,8 @@ create docker images:
   stage: create docker images
   script:
   - sudo docker run --rm -v ${PWD}:/usr/src/mymaven -v ${HOME}/.m2:/root/.m2 -w /usr/src/mymaven maven:3.6.3-jdk-11-slim  mvn -Pproduction clean package
-  - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web -t registry.heroku.com/java-heroku-demo-1703/web  .
-  - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker -t registry.heroku.com/java-heroku-demo-1703/worker .
+  - sudo docker build -f heroku-web/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-web -t registry.heroku.com/java-heroku-demo-1704/web  .
+  - sudo docker build -f heroku-worker/Dockerfile -t registry.vrpconsulting.com/konstantin.bondarchuk/heroku-demo/heroku-worker -t registry.heroku.com/java-heroku-demo-1704/worker .
 
 push to gitlab registry:
   stage: push to gitlab registry
@@ -35,8 +35,8 @@ push to heroku registry, release:
   stage: push to heroku registry, release
   script:
     - sudo docker login -u _ -p $HEROKU_PRODUCTION_API_KEY registry.heroku.com
-    - sudo docker push registry.heroku.com/java-heroku-demo-1703/web
-    - sudo docker push registry.heroku.com/java-heroku-demo-1703/worker
+    - sudo docker push registry.heroku.com/java-heroku-demo-1704/web
+    - sudo docker push registry.heroku.com/java-heroku-demo-1704/worker
     - sudo docker run --rm -e HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY wingrunr21/alpine-heroku-cli container:release web worker --app java-heroku-demo-1703
 
 after_script:
