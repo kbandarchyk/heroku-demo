@@ -15,6 +15,7 @@ public class SpringSecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(final ServerHttpSecurity http ) {
         return http.authorizeExchange()
                    .pathMatchers( "/api/v1.0/customer/**" ).authenticated()
+                   .pathMatchers( "/api/**").authenticated()
                    .anyExchange().permitAll()
                    .and().httpBasic()
                    .and().csrf().disable()
