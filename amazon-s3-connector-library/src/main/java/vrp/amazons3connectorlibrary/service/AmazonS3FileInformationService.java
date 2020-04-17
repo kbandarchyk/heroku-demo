@@ -29,15 +29,20 @@ public class AmazonS3FileInformationService {
     }
     
     public Flux<S3FileDto> fetchAllFilesByBucketDir( final String fileDir ) {
-    
+        
         logger.debug( "Calling fetchAllFilesByBucketDir with params: {}", fileDir );
         
-        return Mono.fromFuture( amazonS3Client.listObjects( ListObjectsRequest.builder()
-                                                                              .bucket( bucket )
-                                                                              .prefix( fileDir )
-                                                                              .build() ) )
+        return Mono.fromFuture( amazonS3Client.listObjects( constructListObjectsRequest( fileDir ) ) )
                    .flatMapIterable( ListObjectsResponse::contents )
                    .map( this::toS3FileDto );
+    }
+    
+    private ListObjectsRequest constructListObjectsRequest( final String fileDir ) {
+        
+        return ListObjectsRequest.builder()
+                                 .bucket( bucket )
+                                 .prefix( fileDir )
+                                 .build();
     }
     
     ////////////////

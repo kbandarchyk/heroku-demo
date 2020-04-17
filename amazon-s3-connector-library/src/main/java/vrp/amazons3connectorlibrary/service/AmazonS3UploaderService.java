@@ -15,7 +15,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import vrp.amazons3connectorlibrary.exception.AmazonS3UploadObjectException;
 
-import java.util.Optional;
+import static vrp.amazons3connectorlibrary.utils.FileDirUtils.constructFilePath;
 
 @Service
 public class AmazonS3UploaderService {
@@ -33,13 +33,13 @@ public class AmazonS3UploaderService {
     }
     
     public Mono<Void> uploadFile( final FilePart filePart
-                                , final String dirPath ) {
+                                , final String fileDir ) {
         
-        logger.debug( "Calling uploadFile with params: fileName: {}, dirPath: {}", filePart.filename(), dirPath );
+        logger.debug( "Calling uploadFile with params: fileName: {}, fileDir: {}", filePart.filename(), fileDir );
     
         return DataBufferUtils.join( filePart.content() )
                               .map( DataBuffer::asByteBuffer )
-                              .map( byteBuffer -> amazonS3Client.putObject( constructPutObjectRequest( filePart, dirPath )
+                              .map( byteBuffer -> amazonS3Client.putObject( constructPutObjectRequest( filePart, fileDir )
                                                                           , AsyncRequestBody.fromByteBuffer( byteBuffer ) ) )
                               .flatMap( Mono::fromFuture )
                               .map( this::checkResponse )
@@ -47,13 +47,11 @@ public class AmazonS3UploaderService {
     }
     
     private PutObjectRequest constructPutObjectRequest( final FilePart file
-                                                      , final String dirPath ) {
+                                                      , final String fileDir ) {
         
         return PutObjectRequest.builder()
                                .bucket( bucket )
-                               .key( Optional.ofNullable( dirPath )
-                                             .map( obj -> obj + "/" + file.filename() )
-                                             .orElse( file.filename() ) )
+                               .key( constructFilePath( file.filename(), fileDir ) )
                                .build();
     }
     

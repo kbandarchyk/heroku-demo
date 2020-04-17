@@ -17,7 +17,8 @@ import vrp.amazons3connectorlibrary.exception.AmazonS3DeleteObjectException;
 import vrp.amazons3connectorlibrary.exception.AmazonS3DownloadObjectException;
 
 import java.io.InputStream;
-import java.util.Optional;
+
+import static vrp.amazons3connectorlibrary.utils.FileDirUtils.constructFilePath;
 
 @Service
 public class AmazonS3DownloaderService {
@@ -39,22 +40,24 @@ public class AmazonS3DownloaderService {
     
         logger.debug( "Calling downloadFile with params: fileName: {}, fileDir: {}", fileName, fileDir );
         
-        final GetObjectRequest request
-                = GetObjectRequest.builder()
-                                  .bucket( bucket )
-                                  .key( Optional.ofNullable( fileDir )
-                                                .map( obj -> obj + "/" + fileName )
-                                                .orElse( fileName ) )
-                                  .build();
-        
         try {
-            return Mono.fromFuture( amazonS3Client.getObject(request, AsyncResponseTransformer.toBytes() ) )
+            return Mono.fromFuture( amazonS3Client.getObject(constructGetObjectRequest( fileName, fileDir )
+                                  , AsyncResponseTransformer.toBytes() ) )
                        .map( this::checkResponse )
                        .map( BytesWrapper::asInputStream );
             
         } catch ( NoSuchKeyException e ){
             throw new AmazonS3DownloadObjectException( e.getMessage() );
         }
+    }
+    
+    private GetObjectRequest constructGetObjectRequest( final String fileName
+                                                      , final String fileDir ) {
+        
+        return GetObjectRequest.builder()
+                               .bucket( bucket )
+                               .key( constructFilePath( fileName, fileDir ) )
+                               .build();
     }
     
     private ResponseBytes<GetObjectResponse> checkResponse( final ResponseBytes<GetObjectResponse> response ) {

@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import vrp.amazons3connectorlibrary.exception.AmazonS3DeleteObjectException;
 
-import java.util.Optional;
+import static vrp.amazons3connectorlibrary.utils.FileDirUtils.constructFilePath;
 
 @Service
 public class AmazonS3DeletionService {
@@ -33,18 +33,18 @@ public class AmazonS3DeletionService {
     
         logger.debug( "Calling deleteFile with params: fileName: {}, fileDir: {}", fileName, fileDir );
         
-        final DeleteObjectRequest request
-                = DeleteObjectRequest.builder()
-                                     .bucket( bucket )
-                                     .key( Optional.ofNullable( fileDir )
-                                                   .map( obj -> obj + "/" + fileName )
-                                                   .orElse( fileName ) )
-                                     .build();
-        
-        return Mono.fromFuture( amazonS3Client.deleteObject( request ) )
+        return Mono.fromFuture( amazonS3Client.deleteObject( constructDeleteObjectRequest( fileName, fileDir ) ) )
                    .map( this::checkResponse )
                    .then();
+    }
+    
+    private DeleteObjectRequest constructDeleteObjectRequest( final String fileName
+                                                            , final String fileDir ) {
         
+        return DeleteObjectRequest.builder()
+                                  .bucket( bucket )
+                                  .key( constructFilePath( fileName, fileDir ) )
+                                  .build();
     }
     
     private DeleteObjectResponse checkResponse( final DeleteObjectResponse response ) {
