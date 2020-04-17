@@ -23,6 +23,10 @@ services:
          hostname: heroku-web
          environment:
            - DATABASE_URL=postgres://heroku_demo_admin:123a456B@postgres:5432/heroku_demo_db
+           - BUCKETEER_BUCKET_NAME=bucketeer-5521ba7d-15ab-4fe5-8d2f-87d42f583b9b
+           - BUCKETEER_AWS_REGION=us-east-1
+           - BUCKETEER_AWS_ACCESS_KEY_ID=AKIAVVKH7VVUKC65CQ5B
+           - BUCKETEER_AWS_SECRET_ACCESS_KEY=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
          depends_on:
             - postgres
          networks:

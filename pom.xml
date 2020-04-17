@@ -12,6 +12,7 @@
         <module>heroku-web</module>
         <module>common-library</module>
         <module>heroku-worker</module>
+        <module>amazon-s3-connector-library</module>
     </modules>
 
     <parent>
