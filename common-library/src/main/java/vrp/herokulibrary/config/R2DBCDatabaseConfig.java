@@ -2,6 +2,7 @@ package vrp.herokulibrary.config;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.postgresql.client.SSLMode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,8 @@ public class R2DBCDatabaseConfig extends AbstractR2dbcConfiguration {
                                                                                  .database( database )
                                                                                  .username( username )
                                                                                  .password( password )
+                                                                                 .enableSsl()
+                                                                                 .sslMode( SSLMode.REQUIRE )
                                                                                  .build() );
     }
 }
